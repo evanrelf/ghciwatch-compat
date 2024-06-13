@@ -19,6 +19,10 @@
             final.ghciwatch
           ];
         };
+
+        ghciwatch-compat-ghcid = final.writeShellScriptBin "ghcid" ''
+          exec ${final.ghciwatch-compat}/bin/ghciwatch-compat "$@"
+        '';
       };
 
       packages = forAllSystems (system:
@@ -31,6 +35,7 @@
         {
           default = pkgs.ghciwatch-compat;
           ghciwatch-compat = pkgs.ghciwatch-compat;
+          ghciwatch-compat-ghcid = pkgs.ghciwatch-compat-ghcid;
         }
       );
 
