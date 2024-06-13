@@ -73,7 +73,10 @@ error() {
 }
 
 envs=()
-args=("--debounce" "100ms")
+args=(
+  "--watch" "."
+  "--debounce" "100ms"
+)
 
 if [ -v "argc_command" ]; then
   if [ -v "argc_target" ]; then
