@@ -17,6 +17,7 @@
           runtimeInputs = [
             final.argc
             final.ghciwatch
+            final.gnugrep
           ];
         };
 
@@ -52,6 +53,7 @@
               pkgs.argc
               pkgs.ghcid
               pkgs.ghciwatch
+              pkgs.gnugrep
               pkgs.shellcheck
             ];
           };

@@ -3,6 +3,11 @@
 set -Eeuo pipefail
 IFS=$'\n\t'
 
+if ! command -v argc >/dev/null; then
+  echo "argc: command not found" >&2
+  exit 1
+fi
+
 # @describe              ghciwatch-compat
 #
 # @meta version          0.0.0
@@ -10,23 +15,23 @@ IFS=$'\n\t'
 # @meta require-tools    ghciwatch
 # @meta combine-shorts
 #
-# @arg       module                             TODO
-# @option    -c --command <COMMAND>             TODO
-# @option    -T --test <EXPR>                   TODO
-# @option    -r --run <EXPR?>                   TODO
-# @option    -l --lint <COMMAND?>               TODO
-# @flag         --clear                         TODO
-# @option       --reload* <PATH>                TODO
-# @option       --restart* <PATH>               TODO
-# @option    -o --outputfile <FILE>             TODO
-# @option       --poll <SECONDS?>               TODO
-# @option       --color[=auto|always|never]     TODO
-# @option       --colour[=auto|always|never]    TODO
-# @option    -s --setup <COMMAND>               TODO
-# @flag      -a --allow-eval                    TODO
-# @option       --target <TARGET>               TODO
-# @flag      -? --help                          Print help
-# @flag      -V --version                       Print version
+# @arg       module
+# @option    -c --command <COMMAND>
+# @option    -T --test <EXPR>
+# @option    -r --run <EXPR?>
+# @option    -l --lint <COMMAND?>
+# @flag         --clear
+# @option       --reload* <PATH>
+# @option       --restart* <PATH>
+# @option    -o --outputfile <FILE>
+# @option       --poll <SECONDS?>
+# @option       --color[=auto|always|never]
+# @option       --colour[=auto|always|never]
+# @option    -s --setup <COMMAND>
+# @flag      -a --allow-eval
+# @option       --target <TARGET>
+# @flag      -? --help
+# @flag      -V --version
 #
 # @option       --test-message <MESSAGE>        Unsupported
 # @flag      -W --warnings                      Unsupported
@@ -45,11 +50,11 @@ IFS=$'\n\t'
 # @flag      -v --verbose                       Unsupported
 # @flag      -q --quiet                         Unsupported
 #
-# @option    --ghciwatch-options~ <OPTS>        TODO
+# @option    --ghciwatch-options~ <OPTS>        Pass all further options verbatim to `ghciwatch`
 
 eval "$(argc --argc-eval "$0" "$@")"
 
-cli_error() {
+error_cli() {
   local message=$1
   echo "\
 error: $message
@@ -67,41 +72,64 @@ error() {
   exit 1
 }
 
-args=()
+envs=()
+args=("--debounce" "100ms")
 
-# module
-if [ -v "argc_module" ]; then
-  echo "TODO module"
-fi
-
-# -c --command <COMMAND>
 if [ -v "argc_command" ]; then
-  echo "TODO command"
+  if [ -v "argc_target" ]; then
+    error "\`--target\` not compatible with \`--command\`"
+  fi
+  if [ -v "argc_module" ]; then
+    error "\`MODULE\` not compatible with \`--command\`"
+  fi
+  args+=("--command" "'$argc_command'")
 else
-  # cabal repl $component \
-  #   --repl-options=-fdiagnostics-color=always \
-  #   --repl-options=-ferror-spans \
-  #   --repl-options=-fno-break-on-error \
-  #   --repl-options=-fno-break-on-exception \
-  #   --repl-options=-fno-code \
-  #   --repl-options=-j \
-  #   --repl-options=-v1 \
-  echo "TODO command"
+  repl=(
+    "-ferror-spans"
+    "-fno-break-on-error"
+    "-fno-break-on-exception"
+    "-fno-code"
+    "-j"
+    "-v1"
+  )
+  if [ -v "argc_color" ]; then
+    repl+=("-fdiagnostics-color=$argc_color")
+  elif [ -v "argc_colour" ]; then
+    repl+=("-fdiagnostics-color=$argc_colour")
+  fi
+  if [ -v "argc_module" ]; then
+    cmd=("ghci" "$argc_module")
+    if [ -v "argc_target" ]; then
+      error "\`--target\` not compatible with \`MODULE\`"
+    fi
+    for arg in "${repl[@]}"; do
+      cmd+=("$arg")
+    done
+  else
+    cmd=("cabal repl")
+    if [ -v "argc_target" ]; then
+      cmd+=("$argc_target")
+    fi
+    for arg in "${repl[@]}"; do
+      cmd+=("--repl-options=$arg")
+    done
+  fi
+  args+=("--command" "'${cmd[@]}'")
 fi
 
 # -T --test <EXPR>
 if [ -v "argc_test" ]; then
-  echo "TODO test"
+  error "TODO test"
 fi
 
 # -r --run <EXPR?>
 if [ -v "argc_run" ]; then
-  echo "TODO run"
+  error "TODO run"
 fi
 
 # -l --lint <COMMAND?>
 if [ -v "argc_lint" ]; then
-  echo "TODO lint"
+  error "TODO lint"
 fi
 
 if [ -v "argc_clear" ]; then
@@ -110,35 +138,32 @@ fi
 
 # --reload* <PATH>
 if [ -v "argc_reload" ]; then
-  echo "TODO reload"
+  error "TODO reload"
 fi
 
 # --restart* <PATH>
 if [ -v "argc_restart" ]; then
-  echo "TODO restart"
+  error "TODO restart"
 fi
 
 if [ -v "argc_outputfile" ]; then
-  args+=("--error-file=$argc_outputfile")
+  args+=("--error-file" "$argc_outputfile")
 fi
 
-# --poll <SECONDS?>
 if [ -v "argc_poll" ]; then
-  echo "TODO poll"
+  if echo "$argc_poll" | grep -qvE '^[1-9][0-9]*$'; then
+    error_cli "invalid value for \`--poll <SECONDS?>\`"
+  fi
+  args+=("--poll" "${argc_poll}s")
 fi
 
-# --color[=auto|always|never]
-# --colour[=auto|always|never]
-if [ -v "argc_color" ] || [ -v "argc_colour" ]; then
-  case "$argc_color" in
-    auto)
-  esac
-  echo "TODO color"
+if [ "${argc_color:-}" = "never" ] || [ "${argc_colour:-}" = "never" ]; then
+  envs+=("NO_COLOR=1")
 fi
 
 # -s --setup <COMMAND>
 if [ -v "argc_setup" ]; then
-  echo "TODO setup"
+  error "TODO setup"
 fi
 
 if [ -v "argc_allow_eval" ]; then
@@ -151,4 +176,4 @@ if [ -v "argc_ghciwatch_options" ]; then
   done
 fi
 
-echo ghciwatch "${args[@]}"
+echo env "${envs[@]}" ghciwatch "${args[@]}"
