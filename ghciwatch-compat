@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+IFS=$'\n\t'
+
+# @describe ghciwatch-compat
+# @arg name=world
+eval "$(argc --argc-eval "$0" "$@")"
+
+# shellcheck disable=SC2154
+echo "Hello, ${argc_name}!"
