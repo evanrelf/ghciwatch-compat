@@ -20,6 +20,8 @@ IFS=$'\n\t'
 # @option       --restart* <PATH>               TODO
 # @option    -o --outputfile <FILE>             TODO
 # @option       --poll <SECONDS?>               TODO
+# @option       --color[=auto|always|never]     TODO
+# @option       --colour[=auto|always|never]    TODO
 # @option    -s --setup <COMMAND>               TODO
 # @flag      -a --allow-eval                    TODO
 # @option       --target <TARGET>               TODO
@@ -39,18 +41,16 @@ IFS=$'\n\t'
 # @option    -C --directory <DIR>               Unsupported
 # @flag         --ignore-loaded                 Unsupported
 # @option    -n --max-messages <INT>            Unsupported
-# @option       --color <AUTO|ALWAYS|NEVER>     Unsupported
-# @option       --colour <AUTO|ALWAYS|NEVER>    Unsupported
 # @flag         --numeric-version               Unsupported
 # @flag      -v --verbose                       Unsupported
 # @flag      -q --quiet                         Unsupported
 #
 # @option    --ghciwatch-options~ <OPTS>        TODO
+
 eval "$(argc --argc-eval "$0" "$@")"
 
 cli_error() {
   local message=$1
-
   echo "\
 error: $message
 
@@ -60,3 +60,95 @@ For more information, try '--help'.
 " >&2
   exit 1
 }
+
+error() {
+  local message=$1
+  echo -e "error: $message\n" >&2
+  exit 1
+}
+
+args=()
+
+# module
+if [ -v "argc_module" ]; then
+  echo "TODO module"
+fi
+
+# -c --command <COMMAND>
+if [ -v "argc_command" ]; then
+  echo "TODO command"
+else
+  # cabal repl $component \
+  #   --repl-options=-fdiagnostics-color=always \
+  #   --repl-options=-ferror-spans \
+  #   --repl-options=-fno-break-on-error \
+  #   --repl-options=-fno-break-on-exception \
+  #   --repl-options=-fno-code \
+  #   --repl-options=-j \
+  #   --repl-options=-v1 \
+  echo "TODO command"
+fi
+
+# -T --test <EXPR>
+if [ -v "argc_test" ]; then
+  echo "TODO test"
+fi
+
+# -r --run <EXPR?>
+if [ -v "argc_run" ]; then
+  echo "TODO run"
+fi
+
+# -l --lint <COMMAND?>
+if [ -v "argc_lint" ]; then
+  echo "TODO lint"
+fi
+
+if [ -v "argc_clear" ]; then
+  args+=("--clear")
+fi
+
+# --reload* <PATH>
+if [ -v "argc_reload" ]; then
+  echo "TODO reload"
+fi
+
+# --restart* <PATH>
+if [ -v "argc_restart" ]; then
+  echo "TODO restart"
+fi
+
+if [ -v "argc_outputfile" ]; then
+  args+=("--error-file=$argc_outputfile")
+fi
+
+# --poll <SECONDS?>
+if [ -v "argc_poll" ]; then
+  echo "TODO poll"
+fi
+
+# --color[=auto|always|never]
+# --colour[=auto|always|never]
+if [ -v "argc_color" ] || [ -v "argc_colour" ]; then
+  case "$argc_color" in
+    auto)
+  esac
+  echo "TODO color"
+fi
+
+# -s --setup <COMMAND>
+if [ -v "argc_setup" ]; then
+  echo "TODO setup"
+fi
+
+if [ -v "argc_allow_eval" ]; then
+  args+=("--enable-eval")
+fi
+
+if [ -v "argc_ghciwatch_options" ]; then
+  for arg in "${argc_ghciwatch_options[@]}"; do
+    args+=("$arg")
+  done
+fi
+
+echo ghciwatch "${args[@]}"
