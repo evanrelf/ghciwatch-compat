@@ -47,3 +47,16 @@ IFS=$'\n\t'
 #
 # @option    --ghciwatch-options~ <OPTS>        TODO
 eval "$(argc --argc-eval "$0" "$@")"
+
+cli_error() {
+  local message=$1
+
+  echo "\
+error: $message
+
+USAGE: ghciwatch-compat [OPTIONS] [MODULE]
+
+For more information, try '--help'.
+" >&2
+  exit 1
+}
