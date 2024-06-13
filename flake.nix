@@ -33,5 +33,24 @@
           ghciwatch-compat = pkgs.ghciwatch-compat;
         }
       );
+
+      devShells = forAllSystems (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
+          };
+        in
+        {
+          default = pkgs.mkShell {
+            packages = [
+              pkgs.argc
+              pkgs.ghcid
+              pkgs.ghciwatch
+              pkgs.shellcheck
+            ];
+          };
+        }
+      );
     };
 }
