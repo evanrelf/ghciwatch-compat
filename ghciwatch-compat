@@ -3,9 +3,47 @@
 set -Eeuo pipefail
 IFS=$'\n\t'
 
-# @describe ghciwatch-compat
-# @arg name=world
+# @describe              ghciwatch-compat
+#
+# @meta version          0.0.0
+# @meta author           Evan Relf
+# @meta require-tools    ghciwatch
+# @meta combine-shorts
+#
+# @arg       module                             TODO
+# @option    -c --command <COMMAND>             TODO
+# @option    -T --test <EXPR>                   TODO
+# @option    -r --run <EXPR?>                   TODO
+# @option    -l --lint <COMMAND?>               TODO
+# @flag         --clear                         TODO
+# @option       --reload* <PATH>                TODO
+# @option       --restart* <PATH>               TODO
+# @option    -o --outputfile <FILE>             TODO
+# @option       --poll <SECONDS?>               TODO
+# @option    -s --setup <COMMAND>               TODO
+# @flag      -a --allow-eval                    TODO
+# @option       --target <TARGET>               TODO
+# @flag      -? --help                          Print help
+# @flag      -V --version                       Print version
+#
+# @option       --test-message <MESSAGE>        Unsupported
+# @flag      -W --warnings                      Unsupported
+# @flag      -S --no-status                     Unsupported
+# @flag         --reverse-errors                Unsupported
+# @flag         --no-height-limit               Unsupported
+# @option    -h --height <INT>                  Unsupported
+# @option    -w --width <INT>                   Unsupported
+# @flag      -t --topmost                       Unsupported
+# @flag         --no-title                      Unsupported
+# @option    -p --project <NAME>                Unsupported
+# @option    -C --directory <DIR>               Unsupported
+# @flag         --ignore-loaded                 Unsupported
+# @option    -n --max-messages <INT>            Unsupported
+# @option       --color <AUTO|ALWAYS|NEVER>     Unsupported
+# @option       --colour <AUTO|ALWAYS|NEVER>    Unsupported
+# @flag         --numeric-version               Unsupported
+# @flag      -v --verbose                       Unsupported
+# @flag      -q --quiet                         Unsupported
+#
+# @option    --ghciwatch-options~ <OPTS>        TODO
 eval "$(argc --argc-eval "$0" "$@")"
-
-# shellcheck disable=SC2154
-echo "Hello, ${argc_name}!"
