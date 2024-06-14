@@ -117,7 +117,7 @@ else
       cmd+=("--repl-options=$arg")
     done
   fi
-  args+=("--command" "'${cmd[@]}'")
+  IFS=" " args+=("--command" "${cmd[*]}")
 fi
 
 # -T --test <EXPR>
@@ -179,4 +179,4 @@ if [ -v "argc_ghciwatch_options" ]; then
   done
 fi
 
-echo env "${envs[@]}" ghciwatch "${args[@]}"
+env "${envs[@]}" ghciwatch "${args[@]}"
