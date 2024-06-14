@@ -25,8 +25,8 @@ fi
 # @option       --restart* <PATH>
 # @option    -o --outputfile <FILE>
 # @option       --poll <SECONDS?>
-# @option       --color[=auto|always|never]
-# @option       --colour[=auto|always|never]
+# @option       --color[=always|never]
+# @option       --colour[=always|never]
 # @option    -s --setup <COMMAND>
 # @flag      -a --allow-eval
 # @option       --target <TARGET>
