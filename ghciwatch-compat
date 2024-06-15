@@ -16,21 +16,21 @@ fi
 # @meta combine-shorts
 #
 # @arg       module
-# @option    -c --command <COMMAND>
-# @option    -T --test <EXPR>
-# @option    -r --run <EXPR?>
-# @option    -l --lint <COMMAND?>
-# @flag         --clear
+# @option    -c --command <COMMAND>             Command to start the GHCi REPL
+# @option    -T --test <EXPR>                   (NOT YET IMPLEMENTED) REPL command run after successful loading
+# @option    -r --run <EXPR?>                   (NOT YET IMPLEMENTED) REPL command run after successful loading
+# @option    -l --lint <COMMAND?>               (NOT YET IMPLEMENTED) Shell command run after successful loading
+# @flag         --clear                         Clear the screen before reload/restart (enabled by default)
 # @flag         --no-clear
-# @option       --reload* <PATH>
-# @option       --restart* <PATH>
-# @option    -o --outputfile <FILE>
-# @option       --poll <SECONDS?>
-# @option       --color[=always|never]
+# @option       --reload* <PATH>                (NOT YET IMPLEMENTED) Reload when the path changes
+# @option       --restart* <PATH>               (NOT YET IMPLEMENTED) Restart when the path changes
+# @option    -o --outputfile <FILE>             Write GHCi output to file
+# @option       --poll <SECONDS?>               Use polling instead of notification-based file watching
+# @option       --color[=always|never]          Force color on or off (defaults to on)
 # @option       --colour[=always|never]
-# @option    -s --setup <COMMAND>
-# @flag      -a --allow-eval
-# @option       --target <TARGET>
+# @option    -s --setup <COMMAND>               (NOT YET IMPLEMENTED) REPL command run during startup
+# @flag      -a --allow-eval                    Evaluate expressions in `-- $>` comments after successful loading
+# @option       --target <TARGET>               Start the GHCi session for a specific component
 # @flag      -? --help
 # @flag      -V --version
 #
