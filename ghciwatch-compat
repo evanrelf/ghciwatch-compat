@@ -21,6 +21,7 @@ fi
 # @option    -r --run <EXPR?>
 # @option    -l --lint <COMMAND?>
 # @flag         --clear
+# @flag         --no-clear
 # @option       --reload* <PATH>
 # @option       --restart* <PATH>
 # @option    -o --outputfile <FILE>
@@ -135,7 +136,9 @@ if [ -v "argc_lint" ]; then
   error "TODO lint"
 fi
 
-if [ -v "argc_clear" ]; then
+if [ -v "argc_clear" ] && [ -v "argc_no_clear" ]; then
+  error "\`--clear\` not compatible with \`--no-clear\`"
+elif [ ! -v "argc_no_clear" ]; then
   args+=("--clear")
 fi
 
